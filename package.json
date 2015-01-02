@@ -1,0 +1,25 @@
+{
+  "name": "dear-souvenirs",
+  "version": "1.0.0",
+  "description": "Extract all high resolution photos from a flickr album by just pasting the url",
+  "main": "extract.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jiminthelab/dear-souvenirs.git"
+  },
+  "keywords": [
+    "flickr",
+    "node",
+    "nodejs",
+    "webscraper"
+  ],
+  "author": "Jim",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jiminthelab/dear-souvenirs/issues"
+  },
+  "homepage": "https://github.com/jiminthelab/dear-souvenirs",
+  "devDependencies": {
+    "request-promise": "^0.3.2"
+  }
+}
