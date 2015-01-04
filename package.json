@@ -20,6 +20,6 @@
   },
   "homepage": "https://github.com/jiminthelab/dear-souvenirs",
   "devDependencies": {
-    "request-promise": "^0.3.2"
+    "bluebird": "^2.5.3"
   }
 }
