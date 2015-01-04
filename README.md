@@ -6,7 +6,3 @@ by one with the 'save as' method.
 
 This script allows you to download an entire Flickr album's high resolution 
 picture by just inputing the album's URL. 
-
-You need sed, nodejs, and wget to use it.
-
-    node extract.js example.html
