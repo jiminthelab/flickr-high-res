@@ -9,4 +9,4 @@ picture by just inputing the album's URL.
 
 You need sed, nodejs, and wget to use it.
 
-    node extract.js www.google.com
+    node extract.js example.html
