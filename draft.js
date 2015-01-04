@@ -1,59 +1,28 @@
-var fs = require('fs');
-var sys = require('sys');
-var exec = require('child_process').exec;
-var http = require('http');
-var url = process.argv[2];
-var localDir = './tmp/listdata.js';
+var d = require('./tmp/listdata');
 
-function puts(error, stdout, stderr) {
-  sys.puts(stdout);
-  fs.writeFile(localDir, stdout, function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log("Temp file created.");
+var fullPath = d.flickr;
+
+var imgListK = [];
+var imgListH = [];
+var imgListL = [];
+
+//all rows
+fullPath.rows.forEach(function(e) {
+  //in all rows, each row
+  // console.log(e.row);
+  e.row.forEach(function(i) {
+    if (!!i.sizes.k) {
+      console.log(i.sizes.k.url);
+      imgListK.push(i.sizes.k.url);
+    } else if (!!i.sizes.h) {
+      console.log(i.sizes.h.url);
+      imgListH.push(i.sizes.h.url);
+    } else if (!!i.sizes.l) {
+      console.log(i.sizes.l.url);
+      imgListL.push(i.sizes.l.url);
     }
   });
-}
-
-// var options = {
-//   host: 'www.google.com',
-//   port: 80,
-//   path: '/upload',
-//   method: 'get'
-// };
-
-// var req = http.request(options, function(res) {
-//   res.setEncoding('utf8');
-//   res.on('data', function (chunk) {
-//     console.log(chunk);
-//   });
-// });
-
-// req.on('error', function(e) {
-//   console.log('problem with request: ' + e.message);
-// });
-
-// // write data to request body
-// req.write('data\n');
-// req.write('data\n');
-// req.end();
-
-
-var options = {
-  host: 'www.flickr.com/photos/evanatwood/sets/72157629684278796/',
-  port: 80
-  // path: ''
-};
-
-http.get(options, function(res) {
-  console.log("Got response: " + res.statusCode);
-
-  res.setEncoding('utf8');
-  res.on('data', function(chunk) {
-    console.log(chunk);
-  });
-
-}).on('error', function(e) {
-  console.log("Got error: " + e.message);
 });
+
+console.log(imgListH);
+
