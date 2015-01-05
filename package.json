@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/jiminthelab/dear-souvenirs",
   "devDependencies": {
-    "bluebird": "^2.5.3"
+    "bluebird": "^2.5.3",
+    "fs-extra": "^0.13.0"
   }
 }
