@@ -1,28 +1,26 @@
-var https   = require('https');
-var fs      = require('fs');
-var exec    = require('child_process').exec;
-var Promise = require('bluebird');
+var Promise   = require('bluebird');
+var https     = require('https');
+var exec      = require('child_process').exec;
+var fs        = Promise.promisifyAll(require('fs'));
+var ensureDir = Promise.promisify(require('fs-extra').ensureDir);
 
 // TODO: argv compulsory
 var url             = process.argv[2];
 var rawDataDir      = './tmp/rawData.html';
 var filteredDataDir = './tmp/filteredData.js';
 
-fs.mkdir('tmp', 0777, function(err) {
-  // If the directory doesn't exist, create it. If it exists, use it.
-  console.log('Using the "tmp" directory.');
-  if (err === 'EEXIST') console.log(err);
-});
+ensureDir('tmp')
+  .then(cloningFlickrAlbum)
+  .then(mkTempFileExportable);
 
-getUrl().then(function() {
-  // Get the URL, then filter the data.
+function mkTempFileExportable() {
   exec([
     "sed ",
     "-e '/Y.listData/!d' ",
     "-e 's/Y.listData/module.exports.flickr/' ",
     rawDataDir
   ].join(''), puts);
-});
+}
 
 function puts(error, stdout, stderr) {
   fs.writeFile(filteredDataDir, stdout, function(err) {
@@ -31,17 +29,18 @@ function puts(error, stdout, stderr) {
   });
 }
 
-function getUrl() {
+function cloningFlickrAlbum() {
   return new Promise(function(resolve, reject) {
 
     var writable = fs.createWriteStream(rawDataDir);
+
     var req = https.get(url, function(res) {
+      console.log('Cloning the album\'s code.');
       res.pipe(writable);
-      console.log('Cloning the album\' code.');
 
       res.on('end', function() {
-        resolve(res);
         console.log('Filtering data.');
+        resolve(res);
       });
     });
 
