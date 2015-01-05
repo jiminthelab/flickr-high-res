@@ -18,6 +18,10 @@ var albumDir        = ['album',
                        date.getSeconds()
                       ].join('');
 
+var Jetty = require('Jetty');
+var jetty = new Jetty(process.stdout);
+jetty.clear();
+
 ensureDir('tmp')
   .then(ensureDir(albumDir))
   .then(urlExists)
@@ -27,29 +31,37 @@ ensureDir('tmp')
   .then(initializeDownload);
 
 function initializeDownload() {
-  imageList.forEach(function(element, index) {
+  return new Promise(function(resolve, reject) {
+    imageList.forEach(function(element, index) {
 
-    var req = https.get(element, function(res) {
+      var req = https.get(element, function(res) {
 
-      var fileExtention = element.match(/\.[0-9a-z]+$/i);
-      var imageData = '';
+        var fileExtention = element.match(/\.[0-9a-z]+$/i);
+        var imageData = '';
 
-      res.setEncoding('binary');
+        res.setEncoding('binary');
 
-      res.on('data', function(chunk) {
-        imageData += chunk;
-      });
-
-      res.on('end', function() {
-        fs.writeFile(albumDir + '/' + index + fileExtention,
-                     imageData,
-                     'binary',
-                     function(err) {
-          if (err) throw err;
-          console.log('Image ' + index + fileExtention + ' copied.');
+        res.on('data', function(chunk) {
+          jetty.moveTo([index,0]);
+          jetty.text(
+            index + ': ' + Math.round(
+              imageData.length / res.headers['content-length'] * 100) + '%'
+            );
+          imageData += chunk;
         });
-      });
 
+        res.on('end', function() {
+          fs.writeFile(albumDir + '/' + index + fileExtention,
+                       imageData,
+                       'binary',
+                       function(err) {
+            if (err) throw err;
+            jetty.moveTo([index, 50]);
+            jetty.text('Image ' + index + fileExtention + ' copied.');
+          });
+        });
+
+      });
     });
   });
 }
@@ -85,19 +97,28 @@ function mkTempFileExportable() {
     execute.stdout.on('data', function(data) {
       resolve(data);
     });
+
+    execute.stderr.on('err', function(err) {
+      reject(err);
+    });
   });
 }
 
 function puts(error, stdout, stderr) {
   fs.writeFile(filteredDataDir, stdout, function(err) {
-    err ? console.log(err) : console.log("Data filtered.")
+    if (err) {
+      console.log(err);
+    } else {
+      console.log("Data filtered.");
+      jetty.clear();
+    }
   });
 }
 
 function cloningFlickrAlbum() {
   return new Promise(function(resolve, reject) {
 
-    var writable = fs.createWriteStream(rawDataDir);
+    var writable = fs.createWriteStream(rawDataDir, {flags: 'w'});
 
     var req = https.get(url, function(res) {
       console.log('Cloning the album\'s code.');
@@ -112,7 +133,6 @@ function cloningFlickrAlbum() {
     req.end();
 
     req.on('error', function(e) {
-      console.error(e);
       reject(e);
     });
 

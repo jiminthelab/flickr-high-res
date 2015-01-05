@@ -21,6 +21,7 @@
   "homepage": "https://github.com/jiminthelab/dear-souvenirs",
   "devDependencies": {
     "bluebird": "^2.5.3",
-    "fs-extra": "^0.13.0"
+    "fs-extra": "^0.13.0",
+    "jetty": "^0.2.1"
   }
 }
