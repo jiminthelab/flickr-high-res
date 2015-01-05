@@ -3,16 +3,15 @@ var fs      = require('fs');
 var exec    = require('child_process').exec;
 var Promise = require('bluebird');
 
+// TODO: argv compulsory
 var url             = process.argv[2];
 var rawDataDir      = './tmp/rawData.html';
 var filteredDataDir = './tmp/filteredData.js';
-var writable        = fs.createWriteStream(rawDataDir);
-
 
 fs.mkdir('tmp', 0777, function(err) {
   // If the directory doesn't exist, create it. If it exists, use it.
-  console.log('"tmp" directory created.');
-  if (err.code === 'EEXIST') console.log('Using the directory "tmp"');
+  console.log('Using the "tmp" directory.');
+  if (err === 'EEXIST') console.log(err);
 });
 
 getUrl().then(function() {
@@ -35,6 +34,7 @@ function puts(error, stdout, stderr) {
 function getUrl() {
   return new Promise(function(resolve, reject) {
 
+    var writable = fs.createWriteStream(rawDataDir);
     var req = https.get(url, function(res) {
       res.pipe(writable);
       console.log('Cloning the album\' code.');
