@@ -9,9 +9,17 @@ var url             = process.argv[2];
 var rawDataDir      = './tmp/rawData.html';
 var filteredDataDir = './tmp/filteredData.js';
 var imageList       = [];
+var date            = new Date();
+var albumDir        = ['album',
+                       date.getMonth(),
+                       date.getDate(),
+                       date.getHours(),
+                       date.getMinutes(),
+                       date.getSeconds()
+                      ].join('');
 
 ensureDir('tmp')
-  .then(ensureDir('images'))
+  .then(ensureDir(albumDir))
   .then(urlExists)
   .then(cloningFlickrAlbum)
   .then(mkTempFileExportable)
@@ -33,7 +41,10 @@ function initializeDownload() {
       });
 
       res.on('end', function() {
-        fs.writeFile('images/' + index + fileExtention, imageData, 'binary', function(err) {
+        fs.writeFile(albumDir + '/' + index + fileExtention,
+                     imageData,
+                     'binary',
+                     function(err) {
           if (err) throw err;
           console.log('Image ' + index + fileExtention + ' copied.');
         });
