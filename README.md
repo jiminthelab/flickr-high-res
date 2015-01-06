@@ -1,13 +1,16 @@
-#dear-souvenirs
+# Dear souvenirs
+
+# About
 
 I had a friend in Umeå, a photographer, that stored all his pictures on Flickr,
-and some one Facebook. There were over 2200 pictures, no way I download them one
-by one with the 'save as' method. 
+and some on Facebook. There were over 2200 pictures, no way I download them one
+by one. Back then, I just asked him his HD.  
 
 This script allows you to download an entire Flickr album's high resolution 
 picture by just inputing the album's URL. 
 
-Flickr's html has a JavaScript variable called Y.listData. All pictures' url are stored inside. What you want to retrive is stored in:
+Flickr's html has a JavaScript variable called Y.listData. All pictures' url are
+stored inside. What you want to retrive is stored in:
 
     Y.listData.rows[i].row[j].sizes
 
@@ -36,3 +39,15 @@ There are 11 picture sizes:
 * sq: square 75px
 
 We are interested in the l format and above.
+
+# Quick Start
+
+1. Get (nodejs or npm)[http://nodejs.org/] if you have it yet.
+
+2. Then:
+
+    npm install
+
+3. To retrieve high resolution photos:
+
+    node extract.js https://www.flickr.com/photos/[username]/sets/[album number]/

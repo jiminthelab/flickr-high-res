@@ -71,6 +71,7 @@ function mkTempFileExportable() {
       reject(err);
     });
 
+    // TODO: Temp hack
     setTimeout(function() {
       resolve();
     }, 2000);
@@ -83,7 +84,7 @@ function puts(error, stdout, stderr) {
       console.log(err);
     } else {
       console.log("Data filtered.");
-      // jetty.clear();
+      jetty.clear();
     }
   });
 }
@@ -128,6 +129,10 @@ function initializeDownload() {
               imageData.length / res.headers['content-length'] * 100) + '%'
             );
           imageData += chunk;
+        });
+
+        res.on('error', function(e) {
+          reject(e);
         });
 
         res.on('end', function() {
