@@ -42,12 +42,12 @@ We are interested in the l format and above.
 
 # Quick Start
 
-1. Get (nodejs or npm)[http://nodejs.org/] if you have it yet.
+1. Get [nodejs or npm](http://nodejs.org/) if you have it yet.
 
 2. Then:
 
-    npm install
+    `npm install`
 
 3. To retrieve high resolution photos:
 
-    node extract.js https://www.flickr.com/photos/[username]/sets/[album number]/
+    `node extract.js https://www.flickr.com/photos/{username}/sets/{album number}/`
