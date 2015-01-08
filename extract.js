@@ -30,9 +30,7 @@ ensureDir('tmp')
   .then(initializeDownload);
 
 function urlExists() {
-  return new Promise(function(resolve, reject) {
-    url ? resolve(url) : console.log('The url is ' + url)
-  });
+    url ? Promise.resolve(url) : console.log('The url is ' + url)
 }
 
 function cloningFlickrAlbum() {
@@ -83,36 +81,32 @@ function puts(error, stdout, stderr) {
     if (err) {
       console.log(err);
     } else {
-      console.log("Data filtered.");
       jetty.clear();
     }
   });
 }
 
 function extractImageUrl() {
-  return new Promise(function(resolve, reject) {
-      var file = require(filteredDataDir).flickr;
+  var file = require(filteredDataDir).flickr;
 
-      // All rows
-      file.rows.forEach(function(line) {
-        // In all rows, each row
-        line.row.forEach(function(picture) {
-          if (!!picture.sizes.k) {
-            imageList.push(picture.sizes.k.url);
-          } else if (!!picture.sizes.h) {
-            imageList.push(picture.sizes.h.url);
-          } else if (!!picture.sizes.l) {
-            imageList.push(picture.sizes.l.url);
-          }
-        });
-      });
-
-      resolve();
+  // All rows
+  file.rows.forEach(function(line) {
+    // In all rows, each row
+    line.row.forEach(function(picture) {
+      if (!!picture.sizes.k) {
+        imageList.push(picture.sizes.k.url);
+      } else if (!!picture.sizes.h) {
+        imageList.push(picture.sizes.h.url);
+      } else if (!!picture.sizes.l) {
+        imageList.push(picture.sizes.l.url);
+      }
+    });
   });
+
+  Promise.resolve();
 }
 
 function initializeDownload() {
-  return new Promise(function(resolve, reject) {
     imageList.forEach(function(element, index) {
 
       var req = https.get(element, function(res) {
@@ -132,7 +126,7 @@ function initializeDownload() {
         });
 
         res.on('error', function(e) {
-          reject(e);
+          Promise.reject(e);
         });
 
         res.on('end', function() {
@@ -148,5 +142,4 @@ function initializeDownload() {
 
       });
     });
-  });
 }
