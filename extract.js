@@ -78,18 +78,13 @@ function mkTempFileExportable() {
 
 function puts(error, stdout, stderr) {
   fs.writeFile(filteredDataDir, stdout, function(err) {
-    if (err) {
-      console.log(err);
-    } else {
-      jetty.clear();
-    }
+    err ? console.log(err) : jetty.clear();
   });
 }
 
 function extractImageUrl() {
   var file = require(filteredDataDir).flickr;
 
-  // All rows
   file.rows.forEach(function(line) {
     // In all rows, each row
     line.row.forEach(function(picture) {
@@ -107,39 +102,39 @@ function extractImageUrl() {
 }
 
 function initializeDownload() {
-    imageList.forEach(function(element, index) {
+  imageList.forEach(function(element, index) {
 
-      var req = https.get(element, function(res) {
+    var req = https.get(element, function(res) {
 
-        var fileExtention = element.match(/\.[0-9a-z]+$/i);
-        var imageData = '';
+      var fileExtention = element.match(/\.[0-9a-z]+$/i);
+      var imageData = '';
 
-        res.setEncoding('binary');
+      res.setEncoding('binary');
 
-        res.on('data', function(chunk) {
-          jetty.moveTo([index,0]);
-          jetty.text(
-            index + ': ' + Math.round(
-              imageData.length / res.headers['content-length'] * 100) + '%'
-            );
-          imageData += chunk;
-        });
-
-        res.on('error', function(e) {
-          Promise.reject(e);
-        });
-
-        res.on('end', function() {
-          fs.writeFile(albumDir + '/' + index + fileExtention,
-                       imageData,
-                       'binary',
-                       function(err) {
-            if (err) throw err;
-            jetty.moveTo([index, 50]);
-            jetty.text('Image ' + index + fileExtention + ' copied.');
-          });
-        });
-
+      res.on('data', function(chunk) {
+        jetty.moveTo([index,0]);
+        jetty.text(
+          index + ': ' + Math.round(
+            imageData.length / res.headers['content-length'] * 100) + '%'
+          );
+        imageData += chunk;
       });
+
+      res.on('error', function(e) {
+        Promise.reject(e);
+      });
+
+      res.on('end', function() {
+        fs.writeFile(albumDir + '/' + index + fileExtention,
+                     imageData,
+                     'binary',
+                     function(err) {
+          if (err) throw err;
+          jetty.moveTo([index, 50]);
+          jetty.text('Image ' + index + fileExtention + ' copied.');
+        });
+      });
+
     });
+  });
 }
