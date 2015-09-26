@@ -1,7 +1,7 @@
 {
-  "name": "dear-souvenirs",
+  "name": "flickr-high-res",
   "version": "1.0.0",
-  "description": "Extract all high resolution photos from a flickr album by just pasting the url",
+  "description": "Extract high resolution photos from a flickr album by pasting the url",
   "main": "extract.js",
   "repository": {
     "type": "git",
