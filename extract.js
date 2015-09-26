@@ -1,9 +1,9 @@
-var Promise   = require('bluebird');
-var https     = require('https');
-var exec      = require('child_process').exec;
-var Jetty     = require('Jetty');
-var fs        = Promise.promisifyAll(require('fs'));
-var ensureDir = Promise.promisify(require('fs-extra').ensureDir);
+var Promise    = require('bluebird');
+var https      = require('https');
+var exec       = require('child_process').exec;
+var Jetty      = require('Jetty');
+var fs         = Promise.promisifyAll(require('fs'));
+var ensureDir  = Promise.promisify(require('fs-extra').ensureDir);
 var ensureFile = Promise.promisify(require('fs-extra').ensureFile);
 
 // TODO: argv compulsory
@@ -30,7 +30,7 @@ ensureDir('tmp')
   .then(initializeDownload);
 
 function urlExists() {
-    url ? Promise.resolve(url) : console.log('The url is ' + url)
+  url ? Promise.resolve(url) : console.log('The url is ' + url)
 }
 
 function cloningFlickrAlbum() {
